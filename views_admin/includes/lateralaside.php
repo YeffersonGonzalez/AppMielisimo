@@ -59,29 +59,21 @@
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-user" style="<?php echo $iconColors['perfiles'] ?? ''; ?>"></i>
             <p>
-              Perfiles
+              Usuario
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
+          
           <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="registrar_usuario.php" class="nav-link">
-                <i class="fas fa-user-plus nav-icon" style="<?php echo $iconColors['usu_registro'] ?? ''; ?>"></i>
-                <p>Registro de usuarios</p>
-              </a>
-            </li>
+            
             <li class="nav-item">
               <a href="lista_usuarios.php" class="nav-link">
                 <i class="fas fa-user-friends nav-icon" style="<?php echo $iconColors['usu_lista'] ?? ''; ?>"></i>
-                <p>Lista de usuarios</p>
+                <p>Listado y Creacion</p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="gestion_roles.php" class="nav-link">
-                <i class="fas fa-user-tag nav-icon"></i>
-                <p>Rol</p>
-              </a>
-            </li>
+           
+            
           </ul>
         </li>
 
@@ -160,7 +152,7 @@
           </ul>
         </li>
 
-        <!-- REPORTES -->
+        <!-- REPORTES 
         <li class="nav-item has-treeview">
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-chart-pie" style="<?php echo $iconColors['reportes'] ?? ''; ?>"></i>
@@ -201,7 +193,7 @@
               </a>
             </li>
           </ul>
-        </li>
+        </li>-->
 
       </ul>
     </nav>

@@ -120,7 +120,7 @@ $marcas = $db->getMarcas();
             const formData = new FormData(document.getElementById("form_productos"));
             const jsonData = Object.fromEntries(formData.entries());
 
-            fetch("http://localhost/AppMielisimo/api/productos/productos_api_create.php", { // Ruta corregida
+            fetch("productos_api_create.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(jsonData)
