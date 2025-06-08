@@ -1,0 +1,27 @@
+    .main-sidebar {
+        background-color: #1a1a2e !important;
+        color: white;
+    }
+
+    .main-sidebar .nav-link {
+        color: #ffffff !important;
+    }
+
+    .main-sidebar .nav-link:hover {
+        background-color: #16213e !important;
+        color: #f1c40f !important;
+    }
+
+    .main-sidebar .nav-link.active {
+        background-color: #0f3460 !important;
+        color: #f1c40f !important;
+    }
+
+    .brand-link {
+        background-color: #0f3460 !important;
+        color: white !important;
+    }
+
+    .brand-link .brand-text {
+        color: #f1c40f !important;
+    }

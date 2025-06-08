@@ -1,0 +1,24 @@
+.sidebar-dark-custom {
+  background-color: #9400b9e0 !important; /* Rosado fuerte */
+  color: #ffffff !important;
+}
+.sidebar-dark-custom .nav-link {
+  color: #ffffff !important;
+}
+.sidebar-dark-custom .nav-link.active, 
+.sidebar-dark-custom .nav-link:hover {
+  background-color: #9400b9e0 !important; /* Rosado más oscuro al pasar el mouse */
+  color: #ffffff !important;
+}
+.sidebar-dark-custom .brand-link {
+  background-color:#9400b9e0!important;
+  color: #ffffff !important;
+}
+
+.main-sidebar {
+  position: fixed !important;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+

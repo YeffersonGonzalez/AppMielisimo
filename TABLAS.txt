@@ -1,0 +1,99 @@
+ 1. Tabla iva (porcentajes de impuestos)
+Esta tabla almacena los diferentes porcentajes de IVA disponibles para aplicarlos a los productos o ventas.
+
+Atributos sugeridos:
+Campo		|	Tipo		|	Descripción
+id		|	INT		|	Clave primaria, autoincrementable.
+descripcion	|	VARCHAR(50)	|	Descripción del IVA (ej. “IVA 19%”).
+porcentaje	|	DECIMAL(5,2)	|	Porcentaje como número (ej. 19.00).
+estado		|	ENUM		|	“activo” o “inactivo”.
+
+
+CREATE TABLE iva (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  descripcion VARCHAR(50) NOT NULL,
+  porcentaje DECIMAL(5,2) NOT NULL,
+  estado ENUM('activo', 'inactivo') DEFAULT 'activo'
+);
+
+2. Tabla stock (movimientos o estado del inventario)
+Puedes manejar el stock de dos formas:
+
+Si usas la tabla productos para guardar el stock actual, y quieres una tabla separada solo para el historial de movimientos de inventario, usa:
+
+Campo		|	Tipo	|	Descripción
+id		|	INT	|	Clave primaria.
+id_producto	|	INT	|	Clave foránea a productos(id).
+tipo_movimiento	|	ENUM	|	“entrada” o “salida”.
+cantidad	|	INT	|	Unidades afectadas.
+fecha		|	DATETIME|	Cuándo ocurrió el movimiento.
+descripcion	|	TEXT	|	Opcional, por ejemplo “compra inicial”.
+
+
+CREATE TABLE stock (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_producto INT NOT NULL,
+  tipo_movimiento ENUM('entrada', 'salida') NOT NULL,
+  cantidad INT NOT NULL,
+  fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+  descripcion TEXT,
+  FOREIGN KEY (id_producto) REFERENCES productos(id)
+);
+
+
+<?php /*
+include_once "includes/config.php"; // Asegúrate de que aquí esté la conexión $conn
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Recibe los datos del formulario
+    $nombre = trim($_POST["nombre"]);
+    $codigo = trim($_POST["codigo"]);
+    $stock = intval($_POST["stock"]);
+    $stock_minimo = intval($_POST["stock_minimo"]);
+    $precio_compra = floatval($_POST["precio_compra"]);
+    $precio_venta = floatval($_POST["precio_venta"]);
+    $fecha_vencimiento = $_POST["fecha_vencimiento"];
+    $id_marca = intval($_POST["id_marca"]);
+    $observaciones = trim($_POST["observaciones"]);
+
+    // Validación básica
+    if (empty($nombre) || empty($codigo) || $stock <= 0 || $precio_compra <= 0) {
+        echo "Error: Faltan datos obligatorios o los valores son inválidos.";
+        exit;
+    }
+
+    // 1. Insertar en tabla productos si es nuevo producto
+    $sql_producto = "INSERT INTO productos (nombre, codigo, stock, stock_minimo, precio_compra, precio_venta, fecha_vencimiento, id_marca, observaciones)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt_producto = $conn->prepare($sql_producto);
+    $stmt_producto->bind_param("ssiiddsis", $nombre, $codigo, $stock, $stock_minimo, $precio_compra, $precio_venta, $fecha_vencimiento, $id_marca, $observaciones);
+
+    if ($stmt_producto->execute()) {
+        $id_producto = $stmt_producto->insert_id;
+
+        // 2. Insertar en tabla compras
+        $fecha_compra = date("Y-m-d H:i:s");
+        $sql_compra = "INSERT INTO compras (id_producto, cantidad, precio_unitario, total, fecha)
+                       VALUES (?, ?, ?, ?, ?)";
+        $total = $stock * $precio_compra;
+        $stmt_compra = $conn->prepare($sql_compra);
+        $stmt_compra->bind_param("iidds", $id_producto, $stock, $precio_compra, $total, $fecha_compra);
+
+        if ($stmt_compra->execute()) {
+            echo "<script>
+                alert('✅ Compra registrada correctamente');
+                window.location.href = 'compras_registrar.php';
+            </script>";
+        } else {
+            echo "❌ Error al registrar la compra: " . $conn->error;
+        }
+
+        $stmt_compra->close();
+    } else {
+        echo "❌ Error al registrar el producto: " . $conn->error;
+    }
+
+    $stmt_producto->close();
+    $conn->close();
+} else {
+    echo "❌ Acceso no permitido.";
