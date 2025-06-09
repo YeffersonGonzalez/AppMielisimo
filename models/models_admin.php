@@ -69,6 +69,14 @@ class DBConfig
         $stmt = $this->db_link->query("SELECT * FROM proveedores");
         return $stmt->fetchAll();
     }
+    public function buscarProveedorPorNombre($buscar)
+            {
+                $this->checkConnection();
+                $query = "SELECT * FROM proveedores WHERE razon_social LIKE :buscar";
+                $stmt = $this->db_link->prepare($query);
+                $stmt->execute([":buscar" => "%$buscar%"]);
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
         public function buscarProductosPorNombre($buscar)
             {
                 $this->checkConnection();

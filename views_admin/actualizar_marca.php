@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/models_admin.php';
-
+require '../controllers/conexion_bd.php';
 $db = new DBConfig();
 $db->config();
 $db->conexion();
