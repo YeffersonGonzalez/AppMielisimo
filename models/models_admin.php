@@ -69,33 +69,48 @@ class DBConfig
         $stmt = $this->db_link->query("SELECT * FROM proveedores");
         return $stmt->fetchAll();
     }
-    public function crearProducto($datos)
-{
-    $this->checkConnection();
-    $query = "INSERT INTO productos (codigo, nombre, stock, stock_min, precio_compra, precio_venta, id_marca, fecha_vencimiento, observacion, activo) 
-              VALUES (:codigo, :nombre, :stock, :stock_min, :precio_compra, :precio_venta, :id_marca, :fecha_vencimiento, :observacion, :activo)";
-    $stmt = $this->db_link->prepare($query);
+    public function buscarProveedorPorNombre($buscar)
+            {
+                $this->checkConnection();
+                $query = "SELECT * FROM proveedores WHERE razon_social LIKE :buscar";
+                $stmt = $this->db_link->prepare($query);
+                $stmt->execute([":buscar" => "%$buscar%"]);
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        public function buscarProductosPorNombre($buscar)
+            {
+                $this->checkConnection();
+                $query = "SELECT * FROM productos WHERE nombre LIKE :buscar";
+                $stmt = $this->db_link->prepare($query);
+                $stmt->execute([":buscar" => "%$buscar%"]);
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
 
-    return $stmt->execute([
-        ":codigo" => $datos["codigo"],
-        ":nombre" => $datos["nom"],
-        ":stock" => $datos["stock"],
-        ":stock_min" => $datos["stock_min"] ?? 0,
-        ":precio_compra" => $datos["prc_compra"],
-        ":precio_venta" => $datos["prc_venta"],
-        ":id_marca" => $datos["id_mrc"],
-        ":fecha_vencimiento" => $datos["fch_vnc"] ?? NULL,
-        ":observacion" => $datos["obs"] ?? "",
-        ":activo" => $datos["activo"] ?? 1
-    ]);
-}
+
 
     public function getMarcas()
     {
         $this->checkConnection();
-        $stmt = $this->db_link->query("SELECT id, nombre FROM marcas");
+        $stmt = $this->db_link->query("SELECT * FROM marcas");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function buscarMarcasPorNombre($buscar)
+    {
+        $this->checkConnection();
+        $query = "SELECT * FROM marcas WHERE nombre LIKE :buscar";
+        $stmt = $this->db_link->prepare($query);
+        $stmt->execute([":buscar" => "%$buscar%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function buscarMarcasPorID($id)
+    {
+        $this->checkConnection();
+        $query = "SELECT * FROM marcas WHERE id = :id";
+        $stmt = $this->db_link->prepare($query);
+        $stmt->execute([":id" => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 
 }
 ?>

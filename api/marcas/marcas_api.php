@@ -1,16 +1,33 @@
 <?php
-include "../../app/marcas/marcas-services.php";
-include "../../config/config.php";
-$objAPI = new marcasAPI();
+header("Content-Type: application/json");
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+require_once __DIR__ . '/../models/models_admin.php';
 
-$method = $_SERVER['REQUEST_METHOD'];
-switch ($method) {
-    case 'GET':
-        $objAPI->getAllMarcas();
-        break;
+$db = new DBConfig();
+$db->config();
+$db->conexion();
 
-    default:
-        echo json_encode(array("data" => null, "error" => "3", "msg" => $errorResponse[3]));
-        break;
+// Obtener el ID de la marca desde la URL
+$id = $_GET['id'] ?? null;
+
+if (!$id) {
+    echo json_encode(["error" => "ID de marca no especificado"]);
+    http_response_code(400);
+    exit;
 }
-error_log("Request method: " . $_SERVER['REQUEST_METHOD']);
+
+// Usamos la función `buscarMarcasPorNombre($id)` para obtener la marca por su ID
+$marca = $db->buscarMarcasPorID($id);
+
+// Si no se encuentra la marca, enviamos un error
+if (!$marca) {
+    echo json_encode(["error" => "Marca no encontrada"]);
+    http_response_code(404);
+    exit;
+}
+
+// Enviar los datos de la marca en formato JSON
+echo json_encode($marca);
+http_response_code(200);
+?>

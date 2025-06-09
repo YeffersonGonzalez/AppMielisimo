@@ -5,11 +5,19 @@ try {
     $db = new DBConfig();
     $db->config();
     $db->conexion();
-    $productos = $db->getProductos();
+
+    $productos = [];
+
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST["txtBuscar"])) {
+        $productos = $db->buscarProductosPorNombre($_POST["txtBuscar"]); // Filtrar por nombre
+    } else {
+        $productos = $db->getProductos(); // Obtener todos los productos
+    }
 } catch (Exception $e) {
     die("Error: " . $e->getMessage());
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -42,14 +50,18 @@ try {
 
             <section class="content">
                 <div class="card-body">
-                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <input type="text" id="searchBox" class="form-control" placeholder="Buscar producto...">
+                    <!-- Formulario de búsqueda -->
+                    <form method="POST" class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" name="txtBuscar" class="form-control" placeholder="Buscar producto por nombre...">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary">Buscar</button>
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                            <button id="btnBuscar" class="btn btn-primary">Buscar</button>
-                        </div>
-                    </div>
+                    </form>
+
                     <table class="table table-bordered table-hover" id="tabla_productos">
                         <thead>
                             <tr>
@@ -84,7 +96,7 @@ try {
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="8">No hay productos registrados</td>
+                                    <td colspan="9">No hay productos registrados</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -146,4 +158,5 @@ try {
 
     </script>
 </body>
+
 </html>

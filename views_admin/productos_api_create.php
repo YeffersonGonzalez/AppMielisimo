@@ -1,26 +1,6 @@
 <?php
 header("Content-Type: application/json");
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Configuración de conexión a la base de datos
-define("DB_HOST", "localhost");
-define("DB_USER", "root");
-define("DB_PASS", "123456789");
-define("DB_NAME", "confiteria_mielissimo");
-
-try {
-    // Conexión a la base de datos con PDO
-    $conexion = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]);
-} catch (Exception $e) {
-    echo json_encode(["error" => "Error de conexión a la base de datos: " . $e->getMessage()]);
-    http_response_code(500);
-    exit;
-}
-
+require '../controllers/conexion_bd.php';
 // Verificar el método de solicitud
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     echo json_encode(["error" => "Método no permitido"]);
